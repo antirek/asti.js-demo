@@ -1,0 +1,29 @@
+{
+  "name": "asti.js",
+  "main": "index.js",
+  "homepage": "https://github.com/antirek/asti.js",
+  "authors": [
+    "antirek <serge.dmitriev@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fetch": "~0.9.0"
+  },
+  "_release": "f06108faaa",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "f06108faaa5f716d94bd5c493db8e5eab3ae15dd"
+  },
+  "_source": "git://github.com/antirek/asti.js.git",
+  "_target": "*",
+  "_originalSource": "asti.js",
+  "_direct": true
+}

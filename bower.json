@@ -1,0 +1,19 @@
+{
+  "name": "asti.js-demo",
+  "version": "0.0.1",
+  "homepage": "https://github.com/antirek/asti.js-demo",
+  "authors": [
+    "antirek <serge.dmitriev@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "asti.js": "*"
+  }
+}

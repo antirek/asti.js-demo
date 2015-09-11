@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="bower_components/asti.js/dist/asti.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+  </head>
+  <body>
+
+    <div class="container">
+      <input id="url" type="text" value="http://localhost:10000">
+      <input id="connect" type="button" value="Connect">
+
+      <div class="row">
+        <div class="col-xs-6 col-md-4"> 
+
+          <h5>Queues</h5>
+          <div id="queues" style="height: 350px;overflow:auto;"></div>
+
+        </div>
+        <div class="col-xs-6 col-md-4"> 
+
+          <h5>Agent events</h5>
+          <div id="events" style="height: 350px;overflow:auto;"></div>
+
+        </div>
+      </div>
+    
+    </div>
+
+    
+
+    <script>
+      var asti;
+
+      $().ready(function () {
+        $("#connect").on('click', function () {
+          var url = $("#url").val();
+          asti = new ASTI({url:url});
+
+
+          asti.connect()
+          .then(function () {
+            return asti.queue.list();
+          })
+          .then(function (queueList) {
+            queueList.forEach(function (queue) {
+              $('#queues').append(queue.queue).append($('<div>', {id: 'members' + queue.queue}));
+            });
+          })
+          .then(function () {
+            return asti.queue.members();
+          })
+          .then(function (membersList) {
+            membersList.forEach(function(member) {
+              $("#members" + member.queue)
+                .append(" -- " + member.location + " ")
+                .append($('<button>', {class: "subscribe", id: 'subscribe' + member.location, text: "subscribe", href: "#"}).attr("data-agent", member.location))
+                .append("<br/>");
+            });
+
+            var handler = function (data) {
+              console.log(data)
+              $('#events')
+                .prepend([
+                    data.event,
+                    data.agentcalled || data.member, 
+                    data.queue,
+                    data.calleridname, 
+                    data.calleridnum,                    
+                  ].join(" "))
+                .prepend("<br/>");
+            }
+
+            $('.subscribe').on('click', function (evt) {
+              asti.agent.subscribe({
+                agent: $(evt.target).attr('data-agent'),
+                onAgentCalled: handler,
+                onAgentConnect: handler,
+                onAgentComplete: handler,
+                onAgentRingNoAnswer: handler
+              });
+            });
+          })
+
+        });
+
+      });
+      
+      /*
+      asti.call({channel: 'SIP/1000', context: 'default', exten: '89135292926', variable: ''})
+        .then(function (response) {
+          return response.text();
+        }).then(function (body) {
+          document.body.innerHTML = body;
+        });
+      */
+      
+    </script>
+  </body>
+</html>
