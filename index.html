@@ -30,7 +30,6 @@
     
     </div>
 
-    
 
     <script>
       var asti;
@@ -38,7 +37,7 @@
       $().ready(function () {
         $("#connect").on('click', function () {
           var url = $("#url").val();
-          asti = new ASTI({url:url});
+          asti = new ASTI({url: url});
 
 
           asti.connect()
@@ -47,7 +46,12 @@
           })
           .then(function (queueList) {
             queueList.forEach(function (queue) {
-              $('#queues').append(queue.queue).append($('<div>', {id: 'members' + queue.queue}));
+              $('#queues')
+                .append(queue.queue)
+                .append($('<div>', {
+                    id: 'members' + queue.queue
+                  })
+                );
             });
           })
           .then(function () {
@@ -57,7 +61,13 @@
             membersList.forEach(function(member) {
               $("#members" + member.queue)
                 .append(" -- " + member.location + " ")
-                .append($('<button>', {class: "subscribe", id: 'subscribe' + member.location, text: "subscribe", href: "#"}).attr("data-agent", member.location))
+                .append($('<button>', {
+                    class: "subscribe", 
+                    id: 'subscribe' + member.location, 
+                    text: "subscribe", 
+                    href: "#"})
+                  .attr("data-agent", member.location)
+                )
                 .append("<br/>");
             });
 
