@@ -10,9 +10,23 @@
   <body>
 
     <div class="container">
-      url: <input id="url" type="text" value="http://localhost:10000"><br/>
-      identity: <input id="identity" type="text" value="vasya"><br/>
-      <input id="connect" type="button" value="Connect">
+
+      <div class="row">
+        <div class="col-xs-6 col-md-4">
+          <h4>Connection</h4>
+          url: <input id="url" type="text" value="http://localhost:10000"><br/>
+          identity: <input id="identity" type="text" value="vasya"><br/>
+          <input id="connect" type="button" value="Connect">
+        </div>
+
+        <div class="col-xs-6 col-md-4">
+          <h5>Originate call</h5>
+          channel: <input id="channel" type="text" value="Local/6050@outbound1"><br/>
+          context: <input id="context" type="text" value="outbound2"><br/>
+          exten: <input id="exten" type="text" value="6000"><br/>
+          <input id="originate" type="button" value="Originate">
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-xs-6 col-md-4"> 
@@ -39,8 +53,28 @@
       $().ready(function () {
         $("#connect").on('click', function () {
           var url = $("#url").val();
+          var identity = $("#identity").val();
           asti = new ASTI({url: url});
-          asti.setIdentity({identity: 'Vasya'}).connect();
+          asti.setIdentity({identity: identity}).connect();
+        });
+
+        $("#originate").on('click', function () {
+          asti.call({
+            channel: $("#channel").val(), 
+            context: $("#context").val(),
+            exten: $("#exten").val(),
+            async: true
+          }, {
+            onAnswer1Side: function (res) {
+              alert('1 answer');
+            },
+            onAnswer2Side: function (res) {
+              alert('2 answer');
+            }
+          })
+          .then(function (response) {            
+            //document.body.innerHTML = JSON.stringify(response);
+          });
         });
 
         $("#getQueues").on('click', function (){
@@ -99,16 +133,6 @@
         });
 
       });
-      
-      /*
-      asti.call({channel: 'SIP/1000', context: 'default', exten: '89135292926', variable: ''})
-        .then(function (response) {
-          return response.text();
-        }).then(function (body) {
-          document.body.innerHTML = body;
-        });
-      */
-      
     </script>
   </body>
 </html>
