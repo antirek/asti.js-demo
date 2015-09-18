@@ -10,13 +10,15 @@
   <body>
 
     <div class="container">
-      <input id="url" type="text" value="http://localhost:10000">
+      url: <input id="url" type="text" value="http://localhost:10000"><br/>
+      identity: <input id="identity" type="text" value="vasya"><br/>
       <input id="connect" type="button" value="Connect">
 
       <div class="row">
         <div class="col-xs-6 col-md-4"> 
 
           <h5>Queues</h5>
+          <input id="getQueues" type="button" value="getQueues">
           <div id="queues" style="height: 350px;overflow:auto;"></div>
 
         </div>
@@ -38,12 +40,11 @@
         $("#connect").on('click', function () {
           var url = $("#url").val();
           asti = new ASTI({url: url});
+          asti.setIdentity({identity: 'Vasya'}).connect();
+        });
 
-
-          asti.connect()
-          .then(function () {
-            return asti.queue.list();
-          })
+        $("#getQueues").on('click', function (){
+        asti.queue.list()
           .then(function (queueList) {
             queueList.forEach(function (queue) {
               $('#queues')

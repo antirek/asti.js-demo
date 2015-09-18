@@ -7,6 +7,9 @@ var ASTI = function (object) {
 
   var socket;
   var url = object.url || null;
+  var identity = null;
+  var sessionid = null;
+
   if (!url) throw new Error('no url in ASTI params');
 
   var addScript = function (callback) {
@@ -24,8 +27,17 @@ var ASTI = function (object) {
 
   var connect = function () {
     return new Promise(function (resolve, reject) {
+      if (!identity) { reject('no identity'); }
       addScript(function () {
         socket = io(url);
+
+        socket.on('error', function (data) {
+          console.log('error', data);
+        });
+
+        sessionid = 'session-' + actionid();
+        socket.emit('identity', {identity: identity, sessionid: sessionid});
+
         resolve();
       });
     });
@@ -53,43 +65,41 @@ var ASTI = function (object) {
     socket.emit('agent:unsubscribe', object);
   };
 
-  var call = function (params) {
-    var prepare = function (options) {
-      return new Promise(function (resolve, reject) {
+  var call = function (request, handlers) {
+    checkSocket();
+    if (!request) {var request = {};}
+    request.actionid = actionid();
+    
+    var listener1 = new eventListener(request.actionid, function (response) {
+      socket.removeEventListener('answer1', listener1);
+      handlers.onAnswer1Side(response.data);
+    });
+    socket.on('answer1', listener1);
 
-      if (!options.channel) reject(new Error('no channel'));
-      if (!options.context) reject(new Error('no context'));
-      if (!options.exten) reject(new Error('no exten'));
-      if (!options.variable) options.variable = '';
+    var listener2 = new eventListener(request.actionid, function (response) {
+      socket.removeEventListener('answer2', listener2);
+      handlers.onAnswer2Side(response.data);
+    });
+    socket.on('answer2', listener2);
 
-      var r = [
-        url,
-        '/call',
-        '?',
-        'channel=' + options.channel,
-        '&',
-        'context=' + options.context,
-        '&',
-        'exten=' + options.exten,
-        '&',
-        'variable=' + options.variable
-        ].join('');
+    //@todo - add timeout remove listeners
 
-        resolve(r);
+    return new Promise(function (resolve, reject) {
+      var listener = new eventListener(request.actionid, function (response) {        
+        socket.removeEventListener('call', listener);
+        resolve(response.data);
       });
-    };
+      socket.on('call', listener);
+      socket.emit('call', request);
+      setTimeout(function() { reject ('call' + " timeout exceed")}, 10000);
+    });
 
-    return prepare(params).then(fetch);
   };
-
 
   var agent = {
     subscribe: subscribeAgentEvents,
     unsubscribe: unsubscribeAgentEvents,
   };
-
-  
-
 
   var actionid = function () {
       var text = "";
@@ -132,7 +142,13 @@ var ASTI = function (object) {
     members: queueMembers
   };
 
+  var setIdentity = function (object) {
+    identity = object.identity;
+    return this;
+  };
+
   return {
+    setIdentity: setIdentity,
     connect: connect,
     call: call,
     agent: agent,

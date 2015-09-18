@@ -5,23 +5,17 @@
   <body>
     <script>
       var asti = new ASTI({url:'http://localhost:10000'});
-      /*
-      asti.call({channel: 'SIP/1000', context: 'default', exten: '89135292926', variable: ''})
-        .then(function (response) {
-          return response.text();
-        }).then(function (body) {
-          document.body.innerHTML = body;
-        });
-      */
+      
       var handler = function (evt) {
         console.log(evt);
       };
 
-      asti.connect()
+      asti.setIdentity({identity: 'Vasya'})
+      .connect()
       .then(function () {
 
         asti.agent.subscribe({
-          agent: 'SIP/6000',
+          agent: 'SIP/100',
           onAgentConnect: handler,
           onAgentCalled: handler,
           onAgentComplete: handler,
@@ -29,7 +23,7 @@
         });
 
         asti.agent.subscribe({
-          agent: 'SIP/6050',
+          agent: 'SIP/101',
           onAgentConnect: handler,
           onAgentCalled: handler,
           onAgentComplete: handler,
