@@ -65,13 +65,6 @@
             context: $("#context").val(),
             exten: $("#exten").val(),
             tracking: $("#tracking").val(),
-          }, {
-            onAnswer1Side: function (res) {
-              alert('1 answer');
-            },
-            onAnswer2Side: function (res) {
-              alert('2 answer');
-            }
           })
           .then(function (response) {            
             //document.body.innerHTML = JSON.stringify(response);
