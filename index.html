@@ -24,6 +24,7 @@
           channel: <input id="channel" type="text" value="Local/6050@outbound1"><br/>
           context: <input id="context" type="text" value="outbound2"><br/>
           exten: <input id="exten" type="text" value="6000"><br/>
+          tracking: <input id="tracking" type="text" value="6768435"><br/>
           <input id="originate" type="button" value="Originate">
         </div>
       </div>
@@ -63,7 +64,7 @@
             channel: $("#channel").val(), 
             context: $("#context").val(),
             exten: $("#exten").val(),
-            async: true
+            tracking: $("#tracking").val(),
           }, {
             onAnswer1Side: function (res) {
               alert('1 answer');
