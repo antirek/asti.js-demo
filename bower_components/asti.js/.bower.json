@@ -1,7 +1,7 @@
 {
   "name": "asti.js",
   "main": "index.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "https://github.com/antirek/asti.js",
   "authors": [
     "antirek <serge.dmitriev@gmail.com>"
@@ -14,16 +14,14 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "fetch": "~0.9.0"
-  },
-  "_release": "0.0.4",
+  "dependencies": {},
+  "_release": "0.0.5",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.4",
-    "commit": "7af44affc17599aad050c15a1057cb8d7a1ef251"
+    "tag": "v0.0.5",
+    "commit": "307c0e1246e6812527d88ea9f52395f7e7d513b1"
   },
   "_source": "git://github.com/antirek/asti.js.git",
-  "_target": "0.0.4",
+  "_target": "0.0.5",
   "_originalSource": "asti.js"
 }
